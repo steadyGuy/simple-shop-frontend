@@ -6,3 +6,7 @@ export interface getProductParam {
   ids?: number[];
   favouriteProducts?: number[];
 }
+
+export interface getProductByIdsParam {
+  ids?: number[];
+}

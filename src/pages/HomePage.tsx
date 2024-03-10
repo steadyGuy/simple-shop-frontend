@@ -14,16 +14,14 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="bg-gray-100">
-        {data && (
-          <ShopItemsContent
-            products={data.items}
-            hasMoreItems={data.hasMore}
-            title="Home page"
-            key={sortBy?.value}
-          />
-        )}
-      </div>
+      {data && (
+        <ShopItemsContent
+          products={data.items}
+          hasMoreItems={data.hasMore}
+          title="Home page"
+          key={sortBy?.value}
+        />
+      )}
     </>
   );
 };

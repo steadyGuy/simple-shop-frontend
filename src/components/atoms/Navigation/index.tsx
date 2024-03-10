@@ -10,7 +10,7 @@ const Navigation = () => {
       <div className="flex-no-wrap relative flex w-full items-center justify-between py-2 shadow-dark-mild dark:bg-neutral-700 lg:flex-wrap lg:py-4">
         <nav>
           <Link to="/">Home</Link>
-          <Link to="/cart" className="ml-4">
+          <Link to={cartItems.length > 0 ? "/cart" : "/"} className="ml-4">
             Shopping cart
           </Link>
         </nav>
@@ -19,7 +19,7 @@ const Navigation = () => {
             <HeartIcon />
             &nbsp;({favouriteItems.length})
           </div>
-          <Link to="/cart" className="ml-4 flex">
+          <Link to={cartItems.length > 0 ? "/cart" : "/"} className="ml-4 flex">
             Cart ({cartItems.length})
           </Link>
         </div>

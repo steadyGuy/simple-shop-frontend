@@ -5,7 +5,10 @@ import {
   QUERY_PRODUCTS_KEY,
 } from "../constants/query.constant";
 
-import { getProducts } from "../repositories/products/product.repository";
+import {
+  getProducts,
+  getProductsByIds,
+} from "../repositories/products/product.repository";
 
 import { IPagination, IProduct } from "@/types";
 
@@ -53,27 +56,22 @@ export const useGetProducts = ({
 
 export const useGetProductsByIds = ({
   ids,
-  sort,
   automaticallyRunning,
 }: {
   ids: number[];
-  sort?: string;
   automaticallyRunning?: boolean;
 }) => {
   const queryKey = [QUERY_PRODUCTS_BY_IDS_KEY];
   if (ids.length > 0) {
     queryKey.push(ids.join(","));
   }
-  if (sort) {
-    queryKey.push(sort);
-  }
+
   return useQuery<IPagination<IProduct>>({
     enabled: automaticallyRunning,
     queryKey,
     queryFn: () =>
-      getProducts({
+      getProductsByIds({
         ids,
-        sort,
       }).then((res) => res.data),
     staleTime: 20000,
   });

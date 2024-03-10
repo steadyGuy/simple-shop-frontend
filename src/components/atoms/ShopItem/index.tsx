@@ -20,7 +20,7 @@ const ShopItem = ({ item }: ShopItemProps) => {
   } = useContext(CartAndFavouritesContext);
 
   const renderAddToCart = () => {
-    return <button onClick={() => addToCart(item.id, 1)}>Add to cart</button>;
+    return <button onClick={() => addToCart(item, 1)}>Add to cart</button>;
   };
 
   const renderRemoveFromCart = () => {

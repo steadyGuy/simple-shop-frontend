@@ -20,17 +20,15 @@ const ShopPage = () => {
 
   return (
     <>
-      <div className="bg-gray-100">
-        {products && shop && (
-          <ShopItemsContent
-            products={products.items}
-            hasMoreItems={products.hasMore}
-            title={shop.title}
-            key={`${shop.id}-${sortBy?.value}`}
-            shopId={activeId}
-          />
-        )}
-      </div>
+      {products && shop && (
+        <ShopItemsContent
+          products={products.items}
+          hasMoreItems={products.hasMore}
+          title={shop.title}
+          key={`${shop.id}-${sortBy?.value}`}
+          shopId={activeId}
+        />
+      )}
     </>
   );
 };

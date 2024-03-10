@@ -63,7 +63,6 @@ const SortByDropdown = () => {
                 </button>
               )
             )}
-            {/* Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" */}
           </div>
         </div>
       </div>

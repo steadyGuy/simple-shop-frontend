@@ -8,3 +8,15 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+.map {
+  height: fit-content;
+}
+.map .map__inner {
+  height: 500px;
+}
+
+.map .map__inner > div {
+  width: 100%;
+  height: 100%;
+}

@@ -1,5 +1,5 @@
 import apiClient from "../apiClient";
-import { getProductParam } from "./product.param";
+import { getProductByIdsParam, getProductParam } from "./product.param";
 
 export const getProducts = async ({
   skip,
@@ -36,6 +36,22 @@ export const getProducts = async ({
     url:
       urlParams.length > 1
         ? encodeURI(`/products?${urlParams.slice(1)}`)
+        : "/products",
+  });
+};
+
+export const getProductsByIds = async ({ ids }: getProductByIdsParam) => {
+  let urlParams = "";
+
+  if (ids) {
+    urlParams = urlParams.concat(`?ids=${ids.join(",")}`);
+  }
+
+  return await apiClient({
+    method: "get",
+    url:
+      urlParams.length > 1
+        ? encodeURI(`/products/ids${urlParams}`)
         : "/products",
   });
 };
