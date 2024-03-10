@@ -91,12 +91,6 @@ Go to [Netlify](https://app.netlify.com/start) and select your repository, `OK` 
 
 ### Issues
 
-#### Husky
-
-If pre-commit hooks are not working be sure that you have installed husky: `husky install`.
-
-By default this command should be triggered after yarn/npm deps are installed.
-
 ## Why
 
 I have created several React apps recently. Setting the configs up is kinda the bottleneck for me to make the ideas simply come true within a very short time.
