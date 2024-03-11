@@ -1,6 +1,5 @@
-import { CART_ITEMS } from "@/constants/global.constant";
 import { CartAndFavouritesContext } from "@/contexts/CartAndFavouritesContextProvider";
-import { useCreateArticleMutation } from "@/queries/order.query";
+import { useCreateOrderMutation } from "@/queries/order.query";
 import { LocationOrderView } from "@/types";
 
 import {
@@ -13,7 +12,7 @@ import {
   useState,
 } from "react";
 import ReactGoogleAutocomplete from "react-google-autocomplete";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 type OrderSummaryProps = {
@@ -21,22 +20,24 @@ type OrderSummaryProps = {
   setClientLocation: Dispatch<SetStateAction<LocationOrderView | null>>;
 };
 
+const defaultForm = {
+  name: "",
+  email: "",
+  phone: "",
+};
+
 const OrderSummary = ({
   clientLocation,
   setClientLocation,
 }: OrderSummaryProps) => {
-  const { cartItems } = useContext(CartAndFavouritesContext);
-  const defaultForm = {
-    name: "",
-    email: "",
-    phone: "",
-  };
+  const { cartItems, clearCart } = useContext(CartAndFavouritesContext);
+  const navigate = useNavigate();
   const {
     mutate,
     isPending,
     data: orderRes,
     isSuccess,
-  } = useCreateArticleMutation();
+  } = useCreateOrderMutation();
   const [form, setForm] = useState(defaultForm);
   const renderInput = ({
     type = "text",
@@ -70,20 +71,19 @@ const OrderSummary = ({
     mutate({
       ...form,
       address: `${clientLocation?.formatedAddress}`,
-      products: cartItems.map((item) => item.id),
+      products: cartItems.map(({ id, amount }) => ({ id, quantity: amount })),
     });
   };
 
   useEffect(() => {
     if (isSuccess && orderRes) {
       toast.success(`Order ${orderRes.id} created successfully`);
-      setTimeout(() => {
-        localStorage.removeItem(CART_ITEMS);
-        setForm(defaultForm);
-        redirect("/");
-      }, 5000);
+      setForm(defaultForm);
+      setClientLocation(null);
+      clearCart();
+      navigate("/");
     }
-  }, [orderRes, isSuccess, defaultForm]);
+  }, [orderRes, isSuccess, navigate, clearCart, setClientLocation]);
 
   return (
     <div id="summary" className="sm:w-1/4 px-8 py-10 w-full">
@@ -120,7 +120,11 @@ const OrderSummary = ({
               })
             }
             required
+            onChange={() => {
+              setClientLocation(null);
+            }}
             placeholder="Enter your address"
+            value={clientLocation?.formatedAddress}
             defaultValue={clientLocation?.formatedAddress}
           />
         </div>
@@ -138,7 +142,7 @@ const OrderSummary = ({
           </button>
         </div>
       </form>
-      <form>
+      {/* <form>
         <div className="pt-10 pb-4">
           <label
             htmlFor="promo"
@@ -157,7 +161,7 @@ const OrderSummary = ({
         <button className="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase disabled:bg-gray-400">
           Apply
         </button>
-      </form>
+      </form> */}
     </div>
   );
 };

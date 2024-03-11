@@ -3,5 +3,5 @@ export interface createOrderParam {
   email: string;
   phone: string;
   address: string;
-  products: number[];
+  products: { quantity: number; id: number }[];
 }

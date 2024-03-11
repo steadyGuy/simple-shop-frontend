@@ -41,6 +41,10 @@ const useCartAndFavouritesContext = () => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   const addToFavourites = (id: number) => {
     const favourite = favouriteItems.find((item) => item === id);
     if (favourite) return;
@@ -71,6 +75,7 @@ const useCartAndFavouritesContext = () => {
     addToFavourites,
     removeFromFavourites,
     increaseItemAmount,
+    clearCart,
     decreaseItemAmount,
   };
 };
