@@ -1,4 +1,5 @@
 import { LocationOrderView } from "@/types";
+import { toast } from "react-toastify";
 
 // using simple fetch to get the place details
 export const fetchPlaceDetails = async (lat: number, lng: number) => {
@@ -13,8 +14,8 @@ export const fetchPlaceDetails = async (lat: number, lng: number) => {
 
     return { coords, formatedAddress } as LocationOrderView;
   } catch (error) {
-    // TODO: handle error
     console.error(error);
+    toast.error("Error fetching place details");
     return null;
   }
 };

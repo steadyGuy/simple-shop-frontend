@@ -1,8 +1,20 @@
+import { CART_ITEMS } from "@/constants/global.constant";
 import { CartAndFavouritesContext } from "@/contexts/CartAndFavouritesContextProvider";
+import { useCreateArticleMutation } from "@/queries/order.query";
 import { LocationOrderView } from "@/types";
 
-import { Dispatch, SetStateAction, useContext, useMemo, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import ReactGoogleAutocomplete from "react-google-autocomplete";
+import { redirect } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type OrderSummaryProps = {
   clientLocation: LocationOrderView | null;
@@ -15,17 +27,23 @@ const OrderSummary = ({
 }: OrderSummaryProps) => {
   const { cartItems } = useContext(CartAndFavouritesContext);
   const defaultForm = {
+    name: "",
     email: "",
     phone: "",
-    address: clientLocation?.formatedAddress,
   };
+  const {
+    mutate,
+    isPending,
+    data: orderRes,
+    isSuccess,
+  } = useCreateArticleMutation();
   const [form, setForm] = useState(defaultForm);
   const renderInput = ({
     type = "text",
     placeholder,
     name,
   }: {
-    type: string;
+    type?: string;
     placeholder: string;
     name: keyof typeof form;
   }) => {
@@ -46,15 +64,39 @@ const OrderSummary = ({
   const totalCost = useMemo(() => {
     return cartItems.reduce((acc, item) => acc + item.amount * item.price, 0);
   }, [cartItems]);
-  console.log("OrderSummary", clientLocation);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    mutate({
+      ...form,
+      address: `${clientLocation?.formatedAddress}`,
+      products: cartItems.map((item) => item.id),
+    });
+  };
+
+  useEffect(() => {
+    if (isSuccess && orderRes) {
+      toast.success(`Order ${orderRes.id} created successfully`);
+      setTimeout(() => {
+        localStorage.removeItem(CART_ITEMS);
+        setForm(defaultForm);
+        redirect("/");
+      }, 5000);
+    }
+  }, [orderRes, isSuccess, defaultForm]);
+
   return (
     <div id="summary" className="sm:w-1/4 px-8 py-10 w-full">
-      <form>
+      <form onSubmit={handleSubmit}>
         <h1 className="font-semibold text-2xl pb-4">Order Summary</h1>
         <div>
           <label className="font-medium inline-block text-sm uppercase">
-            Shipping
+            Address info
           </label>
+          {renderInput({
+            placeholder: "Enter your name",
+            name: "name",
+          })}
           {renderInput({
             type: "email",
             placeholder: "Enter your email",
@@ -66,7 +108,7 @@ const OrderSummary = ({
             name: "phone",
           })}
           <ReactGoogleAutocomplete
-            className="p-2 text-sm w-full mt-3"
+            className="p-2 text-sm w-full mt-3 border-solid border border-gray-500"
             apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             onPlaceSelected={(place) =>
               setClientLocation({
@@ -77,6 +119,8 @@ const OrderSummary = ({
                 },
               })
             }
+            required
+            placeholder="Enter your address"
             defaultValue={clientLocation?.formatedAddress}
           />
         </div>
@@ -86,7 +130,10 @@ const OrderSummary = ({
             <span>Total cost</span>
             <span>${totalCost}</span>
           </div>
-          <button className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full disabled:bg-gray-400">
+          <button
+            disabled={isPending}
+            className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full disabled:bg-gray-400"
+          >
             Checkout
           </button>
         </div>

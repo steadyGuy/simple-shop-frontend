@@ -38,3 +38,16 @@ export type LocationOrderView = {
   formatedAddress: string;
   coords: { lat: number; lng: number };
 };
+
+export interface IOrder {
+  id: number;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  products: IProduct[];
+  timestamp: string;
+  status: string;
+  total: number;
+  shop: IShop;
+}

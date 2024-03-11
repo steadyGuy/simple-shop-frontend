@@ -4,6 +4,7 @@ import { fetchPlaceDetails } from "@/queries/maps.query";
 import { IAddress, IShop, LocationOrderView } from "@/types";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { toast } from "react-toastify";
 
 type MapProps = {
   shopsLocations: IShop[];
@@ -60,8 +61,8 @@ const Map = ({
         const request = {
           origin: new google.maps.LatLng(clientLocation.coords), // Origin coordinates (client location)
           destination: new google.maps.LatLng(
-            Number(shop.address?.longitude),
-            Number(shop.address?.latitude)
+            Number(shop.address?.latitude),
+            Number(shop.address?.longitude)
           ), // Destination coordinates (shop location)
           travelMode: google.maps.TravelMode.DRIVING, // Adjust travel mode as needed (driving, bicycling, transit, etc.)
         };
@@ -83,7 +84,7 @@ const Map = ({
               setCalculatedTimeStrs(calculatedTimeOfRoutes);
             }
           } else {
-            alert(`Directions request failed: ${status}`);
+            toast.error(`${shop.title} directions request failed: ${status}`);
           }
         });
       });
