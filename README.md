@@ -12,3 +12,7 @@ To start an application in development mode, run the following command:
 ```
 
 Your app will be running at `http://localhost:5173/`
+
+To build the application, run the following command:
+
+Production version of the app currently runs on `http://eliftech-shop.surge.sh (surge.sh hosting service)`
