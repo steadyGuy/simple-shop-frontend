@@ -6,7 +6,6 @@ export default defineConfig((configEnv) => {
   const isDevelopment = configEnv.mode === "development";
 
   return {
-    base: "/<REPO>/",
     plugins: [react()],
     server: {
       watch: {
